@@ -56,6 +56,74 @@ namespace geometry
 	inline bool intersect(const Polygon& polygon1, const Polygon& polygon2);
 
 
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Rect& rect1,
+		const Rect& rect2);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Rect& rect,
+		const Circle& circle);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Rect& rect,
+		const Segment& segment);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Rect& rect,
+		const Polygon& polygon);
+
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Circle& circle,
+		const Rect& rect);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Circle& circle1,
+		const Circle& circle2);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Circle& circle,
+		const Segment& segment);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Circle& circle,
+		const Polygon& polygon);
+
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Segment& segment,
+		const Rect& rect);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Segment& segment,
+		const Circle& circle);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Segment& segment1,
+		const Segment& segment2);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Segment& segment,
+		const Polygon& polygon);
+
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Polygon& polygon,
+		const Rect& rect);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Polygon& polygon,
+		const Circle& circle);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Polygon& polygon,
+		const Segment& segment);
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Polygon& polygon1,
+		const Polygon& polygon2);
+
+
 	inline bool overlap(const Rect& rect1, const Rect& rect2);
 
 	inline bool overlap(const Rect& rect, const Circle& circle);
@@ -160,60 +228,6 @@ namespace geometry
 		cocos2d::Vec2 B,
 		cocos2d::Vec2 P);
 
-	inline bool rectanglesIntersect(
-		cocos2d::Vec2 bottom_left1,
-		cocos2d::Vec2 top_right1,
-		cocos2d::Vec2 bottom_left2,
-		cocos2d::Vec2 top_right2);
-
-	inline bool rectanglesOverlap(
-		cocos2d::Vec2 bottom_left1,
-		cocos2d::Vec2 top_right1,
-		cocos2d::Vec2 bottom_left2,
-		cocos2d::Vec2 top_right2);
-
-	inline bool rectangleInRectangle(
-		cocos2d::Vec2 bottom_left1,
-		cocos2d::Vec2 top_right1,
-		cocos2d::Vec2 bottom_left2,
-		cocos2d::Vec2 top_right2);
-
-	inline bool rectangleCircleIntersect(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		cocos2d::Vec2 pos,
-		float radius);
-
-	inline bool rectangleInCircle(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		cocos2d::Vec2 pos,
-		float radius);
-
-	inline bool circleInRectangle(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		cocos2d::Vec2 pos,
-		float radius);
-
-	inline bool rectangleCircleOverlap(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		cocos2d::Vec2 pos,
-		float radius);
-
-	inline bool rectangleSegmentIntersect(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		cocos2d::Vec2 A,
-		cocos2d::Vec2 B);
-
-	inline bool rectangleSegmentOverlap(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		cocos2d::Vec2 A,
-		cocos2d::Vec2 B);
-
 	inline float distLineAndPoint(
 		cocos2d::Vec2 A,
 		cocos2d::Vec2 B,
@@ -249,6 +263,93 @@ namespace geometry
 		cocos2d::Vec2 P,
 		cocos2d::Vec2 A,
 		cocos2d::Vec2 B);
+
+	inline bool rectanglesIntersect(
+		cocos2d::Vec2 bottom_left1,
+		cocos2d::Vec2 top_right1,
+		cocos2d::Vec2 bottom_left2,
+		cocos2d::Vec2 top_right2);
+
+	inline std::set<cocos2d::Vec2> rectanglesIntersectPoints(
+		cocos2d::Vec2 bottom_left1,
+		cocos2d::Vec2 top_right1,
+		cocos2d::Vec2 bottom_left2,
+		cocos2d::Vec2 top_right2);
+
+	inline bool rectanglesOverlap(
+		cocos2d::Vec2 bottom_left1,
+		cocos2d::Vec2 top_right1,
+		cocos2d::Vec2 bottom_left2,
+		cocos2d::Vec2 top_right2);
+
+	inline bool rectangleInRectangle(
+		cocos2d::Vec2 bottom_left1,
+		cocos2d::Vec2 top_right1,
+		cocos2d::Vec2 bottom_left2,
+		cocos2d::Vec2 top_right2);
+
+	inline bool rectangleCircleIntersect(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 pos,
+		float radius);
+
+	inline std::set<cocos2d::Vec2> rectangleCircleIntersectPoints(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 pos,
+		float radius);
+
+	inline bool rectangleInCircle(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 pos,
+		float radius);
+
+	inline bool circleInRectangle(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 pos,
+		float radius);
+
+	inline bool rectangleCircleOverlap(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 pos,
+		float radius);
+
+	inline bool rectangleSegmentIntersect(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B);
+
+	inline std::set<cocos2d::Vec2> rectangleSegmentIntersectPoints(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B);
+
+	inline bool rectangleSegmentOverlap(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B);
+
+	inline bool rectanglePolygonIntersect(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		const std::vector<cocos2d::Vec2>& poly);
+
+	inline std::set<cocos2d::Vec2> rectanglePolygonIntersectPoints(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		const std::vector<cocos2d::Vec2>& poly);
+
+	inline bool rectanglePolygonOverlap(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		const std::vector<cocos2d::Vec2>& poly);
 
 	inline bool segmentsIntersect(
 		cocos2d::Vec2 A,
@@ -292,6 +393,12 @@ namespace geometry
 		cocos2d::Vec2 P,
 		float    radius);
 
+	inline std::vector<cocos2d::Vec2> segmentCircleIntersectPoints(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		cocos2d::Vec2 P,
+		float R);
+
 	inline bool segmentCircleOverlap(
 		cocos2d::Vec2 A,
 		cocos2d::Vec2 B,
@@ -303,24 +410,28 @@ namespace geometry
 		cocos2d::Vec2 B,
 		const std::vector<cocos2d::Vec2>& poly);
 
+	inline std::set<cocos2d::Vec2> segmentPolygonIntersectPoints(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		const std::vector<cocos2d::Vec2>& poly);
+
 	inline bool segmentPolygonOverlap(
 		cocos2d::Vec2 A,
 		cocos2d::Vec2 B,
 		const std::vector<cocos2d::Vec2>& poly);
 
-	inline bool rectanglePolygonIntersect(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		const std::vector<cocos2d::Vec2>& poly);
-
-	inline bool rectanglePolygonOverlap(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		const std::vector<cocos2d::Vec2>& poly);
-
 	inline bool circlesIntersect(
 		cocos2d::Vec2 c1, float r1,
 		cocos2d::Vec2 c2, float r2);
+
+	inline int circlesIntersectPoints(
+		float cx0, float cy0, float radius0,
+		float cx1, float cy1, float radius1,
+		cocos2d::Vec2& intersection1, cocos2d::Vec2& intersection2);
+
+	inline std::vector<cocos2d::Vec2> circlesIntersectPoints(
+		cocos2d::Vec2 p1, float r1,
+		cocos2d::Vec2 p2, float r2);
 
 	inline bool circlesOverlap(
 		cocos2d::Vec2 c1, float r1,
@@ -334,6 +445,11 @@ namespace geometry
 		cocos2d::Vec2& force);
 
 	inline bool circlePolygonIntersect(
+		cocos2d::Vec2 pos,
+		float radius,
+		const std::vector<cocos2d::Vec2>& poly);
+
+	inline std::set<cocos2d::Vec2> circlePolygonIntersectPoints(
 		cocos2d::Vec2 pos,
 		float radius,
 		const std::vector<cocos2d::Vec2>& poly);
@@ -368,6 +484,10 @@ namespace geometry
 		const std::vector<cocos2d::Vec2>& poly);
 
 	inline bool polygonsIntersect(
+		const std::vector<cocos2d::Vec2>& poly1,
+		const std::vector<cocos2d::Vec2>& poly2);
+
+	inline std::set<cocos2d::Vec2> polygonsIntersectPoints(
 		const std::vector<cocos2d::Vec2>& poly1,
 		const std::vector<cocos2d::Vec2>& poly2);
 
@@ -426,11 +546,6 @@ namespace geometry
 		cocos2d::Vec2 pos,
 		float    radius,
 		cocos2d::Vec2& IntersectionPoint);
-
-	inline int findTwoCircleIntersections(
-		float cx0, float cy0, float radius0,
-		float cx1, float cy1, float radius1,
-		cocos2d::Vec2& intersection1, cocos2d::Vec2& intersection2);
 
 	inline bool findTangents(cocos2d::Vec2 center, float radius,
 		cocos2d::Vec2 external_point, cocos2d::Vec2& pt1, cocos2d::Vec2& pt2);

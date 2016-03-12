@@ -116,6 +116,185 @@ namespace geometry
 	}
 
 
+	//----------------------------- Intersect Points -------------------------------//
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Rect& rect1,
+		const Rect& rect2)
+	{
+		auto temp = rectanglesIntersectPoints(
+			rect1.origin, rect1.origin + cocos2d::Vec2(rect1.width, rect1.height),
+			rect2.origin, rect2.origin + cocos2d::Vec2(rect2.width, rect2.height));
+
+		std::vector<cocos2d::Vec2> v;
+		for (auto e : temp)
+			v.emplace_back(e);
+		return v;
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Rect& rect,
+		const Circle& circle)
+	{
+		auto temp = rectangleCircleIntersectPoints(
+			rect.origin, rect.origin + cocos2d::Vec2(rect.width, rect.height),
+			circle.origin, circle.radius);
+
+		std::vector<cocos2d::Vec2> v;
+		for (auto e : temp)
+			v.emplace_back(e);
+		return v;
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Rect& rect,
+		const Segment& segment)
+	{
+		auto temp = rectangleSegmentIntersectPoints(
+			rect.origin, rect.origin + cocos2d::Vec2(rect.width, rect.height),
+			segment.start, segment.end);
+
+		std::vector<cocos2d::Vec2> v;
+		for (auto e : temp)
+			v.emplace_back(e);
+		return v;
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Rect& rect,
+		const Polygon& polygon)
+	{
+		auto temp = rectanglePolygonIntersectPoints(
+			rect.origin, rect.origin + cocos2d::Vec2(rect.width, rect.height),
+			polygon.vertices);
+
+		std::vector<cocos2d::Vec2> v;
+		for (auto e : temp)
+			v.emplace_back(e);
+		return v;
+	}
+
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Circle& circle,
+		const Rect& rect)
+	{
+		return intersectPoints(rect, circle);
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Circle& circle1,
+		const Circle& circle2)
+	{
+		auto v = circlesIntersectPoints(
+			circle1.origin, circle1.radius,
+			circle2.origin, circle2.radius);
+
+		return v;
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Circle& circle,
+		const Segment& segment)
+	{
+		auto v = segmentCircleIntersectPoints(
+			segment.start, segment.end,
+			circle.origin, circle.radius);
+
+		return v;
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Circle& circle,
+		const Polygon& polygon)
+	{
+		auto temp = circlePolygonIntersectPoints(
+			circle.origin, circle.radius, polygon.vertices);
+
+		std::vector<cocos2d::Vec2> v;
+		for (auto e : temp)
+			v.emplace_back(e);
+		return v;
+	}
+
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Segment& segment,
+		const Rect& rect)
+	{
+		return intersectPoints(rect, segment);
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Segment& segment,
+		const Circle& circle)
+	{
+		return intersectPoints(circle, segment);
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Segment& segment1,
+		const Segment& segment2)
+	{
+		cocos2d::Vec2 temp;
+		std::vector<cocos2d::Vec2> v;
+		if (segmentsIntersect(
+			segment1.start, segment1.end,
+			segment2.start, segment2.end, temp))
+		{
+			v.emplace_back(temp);
+		}
+		return v;
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Segment& segment,
+		const Polygon& polygon)
+	{
+		auto points =
+			segmentPolygonIntersectPoints(segment.start, segment.end, polygon.vertices);
+
+		std::vector<cocos2d::Vec2> v;
+		for (auto e : points)
+			v.emplace_back(e);
+		return v;
+	}
+
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Polygon& polygon,
+		const Rect& rect)
+	{
+		return intersectPoints(rect, polygon);
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Polygon& polygon,
+		const Circle& circle)
+	{
+		return intersectPoints(circle, polygon);
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Polygon& polygon,
+		const Segment& segment)
+	{
+		return intersectPoints(segment, polygon);
+	}
+
+	inline std::vector<cocos2d::Vec2> intersectPoints(
+		const Polygon& polygon1,
+		const Polygon& polygon2)
+	{
+		auto temp = polygonsIntersectPoints(polygon1.vertices, polygon2.vertices);
+
+		std::vector<cocos2d::Vec2> v;
+		for (auto e : temp)
+			v.emplace_back(e);
+		return v;
+	}
+
+
 	//----------------------------- Rect Overlap -------------------------------//
 
 	inline bool overlap(const Rect& a, const Rect& b)
@@ -498,6 +677,158 @@ namespace geometry
 		return (P - A).project(B - A) + A;
 	}
 
+	//--------------------distLineAndPoint-------------------------
+	//
+	//	Given 1 lines in 2D space AB and a point P, this function 
+	//	makes the distance between them.
+	//-------------------------------------------------------------
+	inline float distLineAndPoint(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		cocos2d::Vec2 P)
+	{
+		return abs((A - B).cross(B - P)) / (A - B).getLength();
+	}
+
+	//--------------------lineIntersect---------------------------
+	//
+	//	Given 2 lines in 2D space AB, CD this returns true if an 
+	//	intersection occurs.
+	//------------------------------------------------------------
+
+	inline bool lineIntersect(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		cocos2d::Vec2 C,
+		cocos2d::Vec2 D)
+	{
+		CCASSERT(A != B, "invalid line A B");
+		CCASSERT(C != D, "invalid line C D");
+
+		float det = (B - A).cross(D - C);
+		if (fabs(det) < std::numeric_limits<float>::epsilon())
+			return false;
+		return true;
+	}
+
+	//--------------------lineIntersect-------------------------------
+	//
+	//	Given 2 lines in 2D space AB, CD this returns true if an 
+	//	intersection occurs and sets P to the point the intersection
+	//  occurs along line AB and CD
+	//----------------------------------------------------------------
+	inline bool lineIntersect(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		cocos2d::Vec2 C,
+		cocos2d::Vec2 D,
+		cocos2d::Vec2& P)
+	{
+		CCASSERT(A != B, "invalid line A B");
+		CCASSERT(C != D, "invalid line C D");
+
+		float det = (B - A).cross(D - C);
+		if (fabs(det) < std::numeric_limits<float>::epsilon())
+			return false;
+		P = A + (B - A) * ((C - A).cross(D - C) / det);
+		return true;
+	}
+
+	//------------------parallelSegmentsIntersect--------------------
+	//
+	//	Given 2 segments in 2D space AB, CD this returns true if two
+	//  segments are parallel and an intersection occurs.
+	//  returns one of point that included in intersecting area.
+	//---------------------------------------------------------------
+	inline bool parallelSegmentsIntersect(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		cocos2d::Vec2 C,
+		cocos2d::Vec2 D,
+		cocos2d::Vec2& P)
+	{
+		CCASSERT(A != B, "invalid segment A B");
+		CCASSERT(C != D, "invalid segment C D");
+
+		if (B < A)std::swap(A, B);
+		if (D < C)std::swap(C, D);
+
+		//returns false if they are not parallel or parallel but not intersects.
+		if (ccw(A, B, C) != 0 || B < C || D < A)
+			return false;
+
+		if (A < C)
+			P = C;
+		else
+			P = A;
+
+		return true;
+	}
+
+
+	//--------------------lineCircleIntersectPoints--------------------
+	//
+	//	Checks if line and circle intersects.
+	//  And returns the intersecting points with vector.
+	//-----------------------------------------------------------------
+	inline std::vector<cocos2d::Vec2> lineCircleIntersectPoints(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		cocos2d::Vec2 pos,
+		float R)
+	{
+		cocos2d::Vec2 to_b_norm = (B - A).getNormalized();
+		std::vector<cocos2d::Vec2> intersect_points;
+
+		//move the circle into the local space defined by the vector B-A with origin at A.
+		cocos2d::Vec2 local =
+			PointToLocalSpace(pos, to_b_norm, to_b_norm.getPerp(), A);
+
+		if (fabs(local.y) == R)
+		{
+			intersect_points.emplace_back(
+				PointToWorldSpace(
+					cocos2d::Vec2(local.x, 0),
+					to_b_norm,
+					to_b_norm.getPerp(),
+					A));
+		}
+		else if (fabs(local.y) < R)
+		{
+			intersect_points.emplace_back(
+				PointToWorldSpace(
+					cocos2d::Vec2(local.x + sqrt(R * R - local.y * local.y), 0),
+					to_b_norm,
+					to_b_norm.getPerp(),
+					A));
+			intersect_points.emplace_back(
+				PointToWorldSpace(
+					cocos2d::Vec2(local.x - sqrt(R * R - local.y * local.y), 0),
+					to_b_norm,
+					to_b_norm.getPerp(),
+					A));
+		}
+
+		return intersect_points;
+	}
+
+
+	//--------------------pointInRectangle---------------------------
+	//
+	//	Checks if the point P is in rectangle which is bounded by
+	//  A to B. It doesn't care about the ordering.
+	//  It also checks about lines.
+	//  It returns true about boundary.
+	//--------------------------------------------------------------- 
+	inline bool pointInRectangle(
+		cocos2d::Vec2 P,
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B)
+	{
+		return std::min(A.x, B.x) <= P.x && P.x <= std::max(A.x, B.x) &&
+			std::min(A.y, B.y) <= P.y && P.y <= std::max(A.y, B.y);
+	}
+
 	//---------------------rectanglesIntersect----------------------
 	//
 	//	Given 2 rectangles in 2D space
@@ -520,6 +851,58 @@ namespace geometry
 				(bottom_left2.y > top_right1.y) ||
 				(bottom_left2.x > top_right1.x) ||
 				(top_right2.x < bottom_left1.x));
+	}
+
+	//------------------rectanglesIntersectPoints-------------------
+	//
+	//	Given 2 rectangles in 2D space
+	//  bottom_left1, top_right1 = rectangle1 and
+	//  bottom_left2, top_right2 = rectangle2
+	//  this returns the vector of intersection points.
+	//--------------------------------------------------------------
+	inline std::set<cocos2d::Vec2> rectanglesIntersectPoints(
+		cocos2d::Vec2 bottom_left1,
+		cocos2d::Vec2 top_right1,
+		cocos2d::Vec2 bottom_left2,
+		cocos2d::Vec2 top_right2)
+	{
+		CCASSERT(bottom_left1.x < top_right1.x && bottom_left1.y < top_right1.y,
+			"invalid rectangle1");
+		CCASSERT(bottom_left2.x < top_right2.x && bottom_left2.y < top_right2.y,
+			"invalid rectangle2");
+
+		float minX = bottom_left2.x;
+		float minY = bottom_left2.y;
+		float maxX = top_right2.x;
+		float maxY = top_right2.y;
+
+		auto points1 = rectangleSegmentIntersectPoints(
+			bottom_left1, top_right1,
+			cocos2d::Vec2(minX, minY), cocos2d::Vec2(maxX, minY));
+
+		auto points2 = rectangleSegmentIntersectPoints(
+			bottom_left1, top_right1,
+			cocos2d::Vec2(maxX, minY), cocos2d::Vec2(maxX, maxY));
+
+		auto points3 = rectangleSegmentIntersectPoints(
+			bottom_left1, top_right1,
+			cocos2d::Vec2(maxX, maxY), cocos2d::Vec2(minX, maxY));
+
+		auto points4 = rectangleSegmentIntersectPoints(
+			bottom_left1, top_right1,
+			cocos2d::Vec2(minX, maxY), cocos2d::Vec2(minX, minY));
+		
+		std::set<cocos2d::Vec2> filter;
+		for (auto e : points1)
+			filter.emplace(e);
+		for (auto e : points2)
+			filter.emplace(e);
+		for (auto e : points3)
+			filter.emplace(e);
+		for (auto e : points4)
+			filter.emplace(e);
+
+		return filter;
 	}
 
 	//---------------------rectanglesOverlap----------------------
@@ -596,6 +979,47 @@ namespace geometry
 		segmentCircleIntersect(cocos2d::Vec2(maxX, minY), cocos2d::Vec2(maxX, maxY), p, r) ||
 		segmentCircleIntersect(cocos2d::Vec2(maxX, maxY), cocos2d::Vec2(minX, maxY), p, r) ||
 		segmentCircleIntersect(cocos2d::Vec2(minX, maxY), cocos2d::Vec2(minX, minY), p, r);
+	}
+
+	//-----------------rectangleCircleIntersectPoints------------------
+	//
+	//	Given a rectangle and a circle in 2D space
+	//  this returns intersecting points with set.
+	//-----------------------------------------------------------------
+	inline std::set<cocos2d::Vec2> rectangleCircleIntersectPoints(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 pos,
+		float radius)
+	{
+		float minX = bottom_left.x;
+		float minY = bottom_left.y;
+		float maxX = top_right.x;
+		float maxY = top_right.y;
+
+		std::vector<cocos2d::Vec2> points1 = segmentCircleIntersectPoints(
+			cocos2d::Vec2(minX, minY), cocos2d::Vec2(maxX, minY), pos, radius);
+
+		std::vector<cocos2d::Vec2> points2 = segmentCircleIntersectPoints(
+			cocos2d::Vec2(maxX, minY), cocos2d::Vec2(maxX, maxY), pos, radius);
+
+		std::vector<cocos2d::Vec2> points3 = segmentCircleIntersectPoints(
+			cocos2d::Vec2(maxX, maxY), cocos2d::Vec2(minX, maxY), pos, radius);
+
+		std::vector<cocos2d::Vec2> points4 = segmentCircleIntersectPoints(
+			cocos2d::Vec2(minX, maxY), cocos2d::Vec2(minX, minY), pos, radius);
+
+		std::set<cocos2d::Vec2> filter;
+		for (auto e : points1)
+			filter.emplace(e);
+		for (auto e : points2)
+			filter.emplace(e);
+		for (auto e : points3)
+			filter.emplace(e);
+		for (auto e : points4)
+			filter.emplace(e);
+
+		return filter;
 	}
 
 	//--------------------rectangleInCircle---------------------
@@ -711,6 +1135,45 @@ namespace geometry
 	}
 
 
+	//-------------------rectangleSegmentIntersectPoints-------------------
+	//
+	//	Given two rectangles in 2D space
+	//  this returns the intersecting point with set.
+	//--------------------------------------------------------------------
+	inline std::set<cocos2d::Vec2> rectangleSegmentIntersectPoints(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B)
+	{
+		float minX = bottom_left.x;
+		float minY = bottom_left.y;
+		float maxX = top_right.x;
+		float maxY = top_right.y;
+
+		std::set<cocos2d::Vec2> filter;
+		cocos2d::Vec2 temp;
+
+		if (segmentsIntersect(
+			A, B, cocos2d::Vec2(minX, minY), cocos2d::Vec2(maxX, minY), temp))
+			filter.emplace(temp);
+
+		if (segmentsIntersect(
+			A, B, cocos2d::Vec2(maxX, minY), cocos2d::Vec2(maxX, maxY), temp))
+			filter.emplace(temp);
+
+		if (segmentsIntersect(
+			A, B, cocos2d::Vec2(maxX, maxY), cocos2d::Vec2(minX, maxY), temp))
+			filter.emplace(temp);
+
+		if (segmentsIntersect(
+			A, B, cocos2d::Vec2(minX, maxY), cocos2d::Vec2(minX, minY), temp))
+			filter.emplace(temp);
+
+		return filter;
+	}
+
+
 	//--------------------rectangleSegmentOverlap---------------------
 	//
 	//  this returns true if 
@@ -731,157 +1194,116 @@ namespace geometry
 			pointInRectangle(A, bottom_left, top_right);
 	}
 
-	//--------------------distLineAndPoint-------------------------
+
+	//--------------------rectanglePolygonIntersect---------------------
 	//
-	//	Given 1 lines in 2D space AB and a point P, this function 
-	//	makes the distance between them.
-	//-------------------------------------------------------------
-	inline float distLineAndPoint(
-		cocos2d::Vec2 A,
-		cocos2d::Vec2 B,
-		cocos2d::Vec2 P)
-	{
-		return abs((A - B).cross(B - P)) / (A - B).getLength();
-	}
-
-	//--------------------lineIntersect---------------------------
-	//
-	//	Given 2 lines in 2D space AB, CD this returns true if an 
-	//	intersection occurs.
-	//------------------------------------------------------------
-
-	inline bool lineIntersect(
-		cocos2d::Vec2 A,
-		cocos2d::Vec2 B,
-		cocos2d::Vec2 C,
-		cocos2d::Vec2 D)
-	{
-		CCASSERT(A != B, "invalid line A B");
-		CCASSERT(C != D, "invalid line C D");
-
-		float det = (B - A).cross(D - C);
-		if (fabs(det) < std::numeric_limits<float>::epsilon())
-			return false;
-		return true;
-	}
-
-	//--------------------lineIntersect-------------------------------
-	//
-	//	Given 2 lines in 2D space AB, CD this returns true if an 
-	//	intersection occurs and sets P to the point the intersection
-	//  occurs along line AB and CD
-	//----------------------------------------------------------------
-	inline bool lineIntersect(
-		cocos2d::Vec2 A,
-		cocos2d::Vec2 B,
-		cocos2d::Vec2 C,
-		cocos2d::Vec2 D,
-		cocos2d::Vec2& P)
-	{
-		CCASSERT(A != B, "invalid line A B");
-		CCASSERT(C != D, "invalid line C D");
-
-		float det = (B - A).cross(D - C);
-		if (fabs(det) < std::numeric_limits<float>::epsilon()) 
-			return false;
-		P = A + (B - A) * ((C - A).cross(D - C) / det);
-		return true;
-	}
-
-	//------------------parallelSegmentsIntersect--------------------
-	//
-	//	Given 2 segments in 2D space AB, CD this returns true if two
-	//  segments are parallel and an intersection occurs.
-	//  returns one of point that included in intersecting area.
-	//---------------------------------------------------------------
-	inline bool parallelSegmentsIntersect(
-		cocos2d::Vec2 A,
-		cocos2d::Vec2 B,
-		cocos2d::Vec2 C,
-		cocos2d::Vec2 D,
-		cocos2d::Vec2& P)
-	{
-		CCASSERT(A != B, "invalid segment A B");
-		CCASSERT(C != D, "invalid segment C D");
-
-		if (B < A)std::swap(A, B);
-		if (D < C)std::swap(C, D);
-
-		//returns false if they are not parallel or parallel but not intersects.
-		if (ccw(A, B, C) != 0 || B < C || D < A)
-			return false;
-
-		if (A < C) 
-			P = C;
-		else 
-			P = A;
-
-		return true;
-	}
-
-
-	//--------------------lineCircleIntersectPoints--------------------
-	//
-	//	Checks if line and circle intersects.
-	//  And returns the intersecting points with vector.
-	//-----------------------------------------------------------------
-	inline std::vector<cocos2d::Vec2> lineCircleIntersectPoints(
-		cocos2d::Vec2 A,
-		cocos2d::Vec2 B,
-		cocos2d::Vec2 pos,
-		float R)
-	{
-		cocos2d::Vec2 to_b_norm = (B - A).getNormalized();
-		std::vector<cocos2d::Vec2> intersect_points;
-
-		//move the circle into the local space defined by the vector B-A with origin at A.
-		cocos2d::Vec2 local =
-			PointToLocalSpace(pos, to_b_norm, to_b_norm.getPerp(), A);
-
-		if (fabs(local.y) == R)
-		{
-			intersect_points.emplace_back(
-				PointToWorldSpace(
-					cocos2d::Vec2(local.x, 0),
-					to_b_norm,
-					to_b_norm.getPerp(),
-					A));
-		}
-		else if (fabs(local.y) < R)
-		{
-			intersect_points.emplace_back(
-				PointToWorldSpace(
-					cocos2d::Vec2(local.x + sqrt(R * R - local.y * local.y), 0),
-					to_b_norm,
-					to_b_norm.getPerp(),
-					A));
-			intersect_points.emplace_back(
-				PointToWorldSpace(
-					cocos2d::Vec2(local.x - sqrt(R * R - local.y * local.y), 0),
-					to_b_norm,
-					to_b_norm.getPerp(),
-					A));
-		}
-
-		return intersect_points;
-	}
-
-	//--------------------pointInRectangle---------------------------
-	//
-	//	Checks if the point P is in rectangle which is bounded by
-	//  bottom_left to top_right.
-	//  it returns true about boundary.
-	//--------------------------------------------------------------- 
-	inline bool pointInRectangle(
-		cocos2d::Vec2 P,
+	//	Given a rectangle and a polygon in 2D space, this function
+	//  checks if those are intersecting.
+	//------------------------------------------------------------------
+	inline bool rectanglePolygonIntersect(
 		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right)
+		cocos2d::Vec2 top_right,
+		const std::vector<cocos2d::Vec2>& poly)
 	{
 		CCASSERT(bottom_left.x < top_right.x && bottom_left.y < top_right.y,
 			"invalid rectangle");
+		CCASSERT(poly.size() > 2, "poly is not a polygon");
 
-		return bottom_left.x <= P.x && P.x <= top_right.x &&
-			bottom_left.y <= P.y && P.y <= top_right.y;
+		float minX = bottom_left.x;
+		float minY = bottom_left.y;
+		float maxX = top_right.x;
+		float maxY = top_right.y;
+
+		return
+			(segmentPolygonIntersect(
+				cocos2d::Vec2(minX, minY),
+				cocos2d::Vec2(maxX, minY),
+				poly) ||
+				segmentPolygonIntersect(
+					cocos2d::Vec2(maxX, minY),
+					cocos2d::Vec2(maxX, maxY),
+					poly) ||
+				segmentPolygonIntersect(
+					cocos2d::Vec2(maxX, maxY),
+					cocos2d::Vec2(minX, maxY),
+					poly) ||
+				segmentPolygonIntersect(
+					cocos2d::Vec2(minX, maxY),
+					cocos2d::Vec2(minX, minY),
+					poly));
+	}
+
+	//------------------ rectanglePolygonIntersectPoints ---------------------
+	//
+	//  returns the intersecting points between rectangle and polygon.
+	//----------------------------------------------------------------------
+	inline std::set<cocos2d::Vec2> rectanglePolygonIntersectPoints(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		const std::vector<cocos2d::Vec2>& poly)
+	{
+		float minX = bottom_left.x;
+		float minY = bottom_left.y;
+		float maxX = top_right.x;
+		float maxY = top_right.y;
+
+		auto points1 = segmentPolygonIntersectPoints(
+			cocos2d::Vec2(minX, minY),
+			cocos2d::Vec2(maxX, minY),
+			poly);
+		auto points2 = segmentPolygonIntersectPoints(
+			cocos2d::Vec2(maxX, minY),
+			cocos2d::Vec2(maxX, maxY),
+			poly);
+		auto points3 = segmentPolygonIntersectPoints(
+			cocos2d::Vec2(maxX, maxY),
+			cocos2d::Vec2(minX, maxY),
+			poly);
+		auto points4 = segmentPolygonIntersectPoints(
+			cocos2d::Vec2(minX, maxY),
+			cocos2d::Vec2(minX, minY),
+			poly);
+
+		std::set<cocos2d::Vec2> filter;
+
+		for (auto e : points1)
+			filter.emplace(e);
+		for (auto e : points2)
+			filter.emplace(e);
+		for (auto e : points3)
+			filter.emplace(e);
+		for (auto e : points4)
+			filter.emplace(e);
+
+		return filter;
+	}
+
+	//--------------------- rectanglePolygonOverlap -------------------
+	//
+	//  returns true if the rectangle overlap to polygon.
+	//  overlap means rectangle can be located inside to polygon or
+	//  polygon can be located inside to rectangle.
+	//  it includes the collision of boundary.
+	//-----------------------------------------------------------------
+	inline bool rectanglePolygonOverlap(
+		cocos2d::Vec2 bottom_left,
+		cocos2d::Vec2 top_right,
+		const std::vector<cocos2d::Vec2>& poly)
+	{
+		CCASSERT(bottom_left.x < top_right.x && bottom_left.y < top_right.y,
+			"invalid rectangle");
+		CCASSERT(poly.size() > 2, "poly is not a polygon");
+
+		if (rectanglePolygonIntersect(bottom_left, top_right, poly))
+			return true;
+
+		if (pointInRectangle(poly[0], bottom_left, top_right))
+			return true;
+
+		if (pointInPolygon(bottom_left, poly))
+			return true;
+
+		return false;
 	}
 
 	//--------------------segmentIntersect-------------------------
@@ -1058,6 +1480,28 @@ namespace geometry
 			!(pointInCircle(P, radius, A) && pointInCircle(P, radius, B));
 	}
 
+	//------------------- segmentCircleIntersectPoints ---------------------
+	//
+	//  returns the intersecting point of line segement AB with a circle at
+	//  position P with radius.
+	//----------------------------------------------------------------------
+	inline std::vector<cocos2d::Vec2> segmentCircleIntersectPoints(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		cocos2d::Vec2 P,
+		float R)
+	{
+		std::vector<cocos2d::Vec2> points =
+			geometry::lineCircleIntersectPoints(A, B, P, R);
+
+		std::vector<cocos2d::Vec2> ret;
+
+		for (auto e : points)
+			if (geometry::pointInRectangle(e, A, B))
+				ret.push_back(e);
+		return ret;
+	}
+
 	//----------------------- segmentCircleOverlap ---------------------------
 	//
 	//  returns true if the line segemnt AB intersects or included in a circle 
@@ -1087,6 +1531,10 @@ namespace geometry
 		}
 	}
 
+	//--------------------- segmentPolygonIntersect ------------------------
+	//
+	//  returns true if the given polygon and line AB are intersecting.
+	//----------------------------------------------------------------------
 	inline bool segmentPolygonIntersect(
 		cocos2d::Vec2 A,
 		cocos2d::Vec2 B,
@@ -1104,6 +1552,40 @@ namespace geometry
 		return false;
 	}
 
+	//------------------ segmentPolygonIntersectPoints ---------------------
+	//
+	//  returns the intersecting points between polygon and line AB.
+	//----------------------------------------------------------------------
+	inline std::set<cocos2d::Vec2> segmentPolygonIntersectPoints(
+		cocos2d::Vec2 A,
+		cocos2d::Vec2 B,
+		const std::vector<cocos2d::Vec2>& poly)
+	{
+		CCASSERT(A != B, "invalid segment");
+		CCASSERT(poly.size() > 2, "poly is not a polygon");
+
+		std::set<cocos2d::Vec2> filter;
+
+		for (size_t i = 0; i < poly.size(); ++i)
+		{
+			size_t j = (i + 1) % poly.size();
+			cocos2d::Vec2 temp;
+
+			if (segmentsIntersect(A, B, poly[i], poly[j], temp))
+			{
+				filter.emplace(temp);
+			}
+		}
+
+		return filter;
+	}
+
+
+	//---------------------- segmentPolygonOverlap -------------------------
+	//
+	//  returns true if the given polygon and line AB are intersecting.
+	//  it also returns true if one is located inside to other one.
+	//----------------------------------------------------------------------
 	inline bool segmentPolygonOverlap(
 		cocos2d::Vec2 A,
 		cocos2d::Vec2 B,
@@ -1114,66 +1596,6 @@ namespace geometry
 		return pointInPolygon(A, poly) || segmentPolygonIntersect(A, B, poly);
 	}
 
-	inline bool rectanglePolygonIntersect(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		const std::vector<cocos2d::Vec2>& poly)
-	{
-		CCASSERT(bottom_left.x < top_right.x && bottom_left.y < top_right.y,
-			"invalid rectangle");
-		CCASSERT(poly.size() > 2, "poly is not a polygon");
-
-		float minX = bottom_left.x;
-		float minY = bottom_left.y;
-		float maxX = top_right.x;
-		float maxY = top_right.y;
-
-		return	
-			(segmentPolygonIntersect(
-				cocos2d::Vec2(minX, minY),
-				cocos2d::Vec2(maxX, minY),
-				poly) ||
-			segmentPolygonIntersect(
-				cocos2d::Vec2(maxX, minY),
-				cocos2d::Vec2(maxX, maxY),
-				poly) ||
-			segmentPolygonIntersect(
-				cocos2d::Vec2(maxX, maxY),
-				cocos2d::Vec2(minX, maxY),
-				poly) ||
-			segmentPolygonIntersect(
-				cocos2d::Vec2(minX, maxY),
-				cocos2d::Vec2(minX, minY),
-				poly));
-	}
-
-	//--------------------- rectanglePolygonOverlap -------------------
-	//
-	//  returns true if the rectangle overlap to polygon.
-	//  overlap means rectangle can be located inside to polygon or
-	//  polygon can be located inside to rectangle.
-	//  it includes the collision of boundary.
-	//-----------------------------------------------------------------
-	inline bool rectanglePolygonOverlap(
-		cocos2d::Vec2 bottom_left,
-		cocos2d::Vec2 top_right,
-		const std::vector<cocos2d::Vec2>& poly)
-	{
-		CCASSERT(bottom_left.x < top_right.x && bottom_left.y < top_right.y,
-			"invalid rectangle");
-		CCASSERT(poly.size() > 2, "poly is not a polygon");
-
-		if (rectanglePolygonIntersect(bottom_left, top_right, poly))
-			return true;
-
-		if (pointInRectangle(poly[0], bottom_left, top_right))
-			return true;
-
-		if (pointInPolygon(bottom_left, poly))
-			return true;
-
-		return false;
-	}
 
 	//--------------------- circlesIntersect ----------------------
 	//
@@ -1196,6 +1618,96 @@ namespace geometry
 			return true;
 		}
 		return false;
+	}
+
+	// Find the points where the two circles intersect.
+	inline int circlesIntersectPoints(
+		float cx0, float cy0, float radius0,
+		float cx1, float cy1, float radius1,
+		cocos2d::Vec2& intersection1, cocos2d::Vec2& intersection2)
+	{
+		// Find the distance between the centers.
+		float dx = cx0 - cx1;
+		float dy = cy0 - cy1;
+		float dist = sqrt(dx * dx + dy * dy);
+
+		// See how many solutions there are.
+		if (dist > radius0 + radius1)
+		{
+			// No solutions, the circles are too far apart.
+			intersection1 = cocos2d::Vec2(NAN, NAN);
+			intersection2 = cocos2d::Vec2(NAN, NAN);
+			return 0;
+		}
+		else if (dist < abs(radius0 - radius1))
+		{
+			// No solutions, one circle contains the other.
+			intersection1 = cocos2d::Vec2(NAN, NAN);
+			intersection2 = cocos2d::Vec2(NAN, NAN);
+			return 0;
+		}
+		else if ((dist == 0) && (radius0 == radius1))
+		{
+			// No solutions, the circles coincide.
+			intersection1 = cocos2d::Vec2(NAN, NAN);
+			intersection2 = cocos2d::Vec2(NAN, NAN);
+			return 0;
+		}
+		else
+		{
+			// Find a and h.
+			float a = (radius0 * radius0 -
+				radius1 * radius1 + dist * dist) / (2 * dist);
+			float h = sqrt(radius0 * radius0 - a * a);
+
+			// Find P2.
+			float cx2 = cx0 + a * (cx1 - cx0) / dist;
+			float cy2 = cy0 + a * (cy1 - cy0) / dist;
+
+			// Get the points P3.
+			intersection1 = cocos2d::Vec2(
+				(cx2 + h * (cy1 - cy0) / dist),
+				(cy2 - h * (cx1 - cx0) / dist));
+
+			intersection2 = cocos2d::Vec2(
+				(cx2 - h * (cy1 - cy0) / dist),
+				(cy2 + h * (cx1 - cx0) / dist));
+
+			// See if we have 1 or 2 solutions.
+			if (dist == radius0 + radius1) return 1;
+			return 2;
+		}
+	}
+
+	//------------------------ circlesIntersectPoints ---------------------
+	//
+	//  Given two circles this function calculates the intersection points
+	//  of any overlap. Returns the vector of intersections points.
+	//  It returns no point when they are same.
+	//---------------------------------------------------------------------
+	inline std::vector<cocos2d::Vec2> circlesIntersectPoints(
+		cocos2d::Vec2 p1, float r1,
+		cocos2d::Vec2 p2, float r2)
+	{
+		cocos2d::Vec2 t1, t2;
+		int result = circlesIntersectPoints(p1.x, p1.y, r1, p2.x, p2.y, r2, t1, t2);
+		std::vector<cocos2d::Vec2> points;
+
+		if (result == 0)
+		{
+			return points;
+		}
+		else if (result == 1)
+		{
+			points.push_back(t1);
+			return points;
+		}
+		else
+		{
+			points.push_back(t1);
+			points.push_back(t2);
+			return points;
+		}
 	}
 
 	//------------------------ circlesIntersect ------------------
@@ -1320,6 +1832,36 @@ namespace geometry
 		return false;
 	}
 
+	//-----------------circlePolygonIntersectPoints-----------------
+	//
+	//	Given a circle and a polygon in 2D space
+	//  this returns the vector of intersection points.
+	//  Sometimes this function calculates the same points
+	//  as different, because of checking floats.
+	//--------------------------------------------------------------
+	inline std::set<cocos2d::Vec2> circlePolygonIntersectPoints(
+		cocos2d::Vec2 pos,
+		float radius,
+		const std::vector<cocos2d::Vec2>& poly)
+	{
+		CCASSERT(radius > 0, "invalid circle radius");
+		CCASSERT(poly.size() > 2, "poly is not a polygon");
+
+		std::set<cocos2d::Vec2> filter;
+
+		for (size_t i = 0; i < poly.size(); ++i)
+		{
+			size_t j = (i + 1) % poly.size();
+			std::vector<cocos2d::Vec2> points =
+				segmentCircleIntersectPoints(poly[i], poly[j], pos, radius);
+
+			for (auto e : points)
+				filter.emplace(e);
+		}
+
+		return filter;
+	}
+
 	//--------------------- circlePolygonOverlap ----------------------
 	//
 	//  returns true if the polygon and circle intersects.
@@ -1380,16 +1922,8 @@ namespace geometry
 
 			for (auto e : v)
 			{
-				float minX = std::min(poly[i].x, poly[j].x);
-				float minY = std::min(poly[i].y, poly[j].y);
-				float maxX = std::max(poly[i].x, poly[j].x);
-				float maxY = std::max(poly[i].y, poly[j].y);
-
-				if (geometry::pointInRectangle(
-					e,
-					cocos2d::Vec2(minX, minY),
-					cocos2d::Vec2(maxX, maxY)))
-					end_to_end.emplace_back(std::make_pair(e, i));
+				if (geometry::pointInRectangle(e,poly[i],poly[j]))
+						end_to_end.emplace_back(std::make_pair(e, i));
 			}
 		}
 
@@ -1620,6 +2154,43 @@ namespace geometry
 			}
 		}
 		return false;
+	}
+
+
+	//--------------------polygonsIntersectPoints-------------------
+	//
+	//	Given two polygons in 2D space
+	//  this returns the set of intersection points.
+	//--------------------------------------------------------------
+	inline std::set<cocos2d::Vec2> polygonsIntersectPoints(
+		const std::vector<cocos2d::Vec2>& poly1,
+		const std::vector<cocos2d::Vec2>& poly2)
+	{
+		CCASSERT(poly1.size() > 2, "poly1 is not a polygon");
+		CCASSERT(poly2.size() > 2, "poly2 is not a polygon");
+
+		std::set<cocos2d::Vec2> filter;
+
+		//test each line segment of object1 against each segment of object2
+		for (size_t i = 0; i < poly1.size(); ++i)
+		{
+			size_t next_i = (i + 1) % poly1.size();
+
+			for (size_t j = 0; j < poly2.size(); ++j)
+			{
+				size_t next_j = (j + 1) % poly2.size();
+
+				cocos2d::Vec2 temp;
+				if (segmentsIntersect(
+					poly1[i], poly1[next_i],
+					poly2[j], poly2[next_j], temp))
+				{
+					filter.emplace(temp);
+				}
+			}
+		}
+
+		return filter;
 	}
 
 
@@ -1954,65 +2525,6 @@ namespace geometry
 		return ipFound;
 	}
 
-
-	// Find the points where the two circles intersect.
-	inline int findTwoCircleIntersections(
-		float cx0, float cy0, float radius0,
-		float cx1, float cy1, float radius1,
-		cocos2d::Vec2& intersection1, cocos2d::Vec2& intersection2)
-	{
-		// Find the distance between the centers.
-		float dx = cx0 - cx1;
-		float dy = cy0 - cy1;
-		double dist = sqrt(dx * dx + dy * dy);
-
-		// See how many solutions there are.
-		if (dist > radius0 + radius1)
-		{
-			// No solutions, the circles are too far apart.
-			intersection1 = cocos2d::Vec2(NAN, NAN);
-			intersection2 = cocos2d::Vec2(NAN, NAN);
-			return 0;
-		}
-		else if (dist < abs(radius0 - radius1))
-		{
-			// No solutions, one circle contains the other.
-			intersection1 = cocos2d::Vec2(NAN, NAN);
-			intersection2 = cocos2d::Vec2(NAN, NAN);
-			return 0;
-		}
-		else if ((dist == 0) && (radius0 == radius1))
-		{
-			// No solutions, the circles coincide.
-			intersection1 = cocos2d::Vec2(NAN, NAN);
-			intersection2 = cocos2d::Vec2(NAN, NAN);
-			return 0;
-		}
-		else
-		{
-			// Find a and h.
-			double a = (radius0 * radius0 -
-				radius1 * radius1 + dist * dist) / (2 * dist);
-			double h = sqrt(radius0 * radius0 - a * a);
-
-			// Find P2.
-			double cx2 = cx0 + a * (cx1 - cx0) / dist;
-			double cy2 = cy0 + a * (cy1 - cy0) / dist;
-
-			// Get the points P3.
-			intersection1 = cocos2d::Vec2(
-				(float)(cx2 + h * (cy1 - cy0) / dist),
-				(float)(cy2 - h * (cx1 - cx0) / dist));
-			intersection2 = cocos2d::Vec2(
-				(float)(cx2 - h * (cy1 - cy0) / dist),
-				(float)(cy2 + h * (cx1 - cx0) / dist));
-
-			// See if we have 1 or 2 solutions.
-			if (dist == radius0 + radius1) return 1;
-			return 2;
-		}
-	}
-
 	// Find the tangent points for this circle and external point.
 	// Return true if we find the tangents, false if the point is
 	// inside the circle.
@@ -2038,7 +2550,7 @@ namespace geometry
 		// Find the points of intersection between
 		// the original circle and the circle with
 		// center external_point and radius dist.
-		findTwoCircleIntersections(
+		circlesIntersectPoints(
 			center.x, center.y, radius,
 			external_point.x, external_point.y, (float)L,
 			pt1, pt2);

@@ -89,6 +89,30 @@ namespace geometry
 		return geometry::intersect(*this, *other);
 	}
 
+	std::vector<cocos2d::Vec2> Polygon::intersectPoints(const Shape* const other) const
+	{
+		return other->intersectPoints(this);
+	}
+
+	std::vector<cocos2d::Vec2> Polygon::intersectPoints(const Rect* const other) const
+	{
+		return geometry::intersectPoints(*this, *other);
+	}
+
+	std::vector<cocos2d::Vec2> Polygon::intersectPoints(const Segment* const other) const
+	{
+		return geometry::intersectPoints(*this, *other);
+	}
+
+	std::vector<cocos2d::Vec2> Polygon::intersectPoints(const Circle* const other) const
+	{
+		return geometry::intersectPoints(*this, *other);
+	}
+
+	std::vector<cocos2d::Vec2> Polygon::intersectPoints(const Polygon* const other) const
+	{
+		return geometry::intersectPoints(*this, *other);
+	}
 
 	bool Polygon::overlap(const Shape* const other) const
 	{

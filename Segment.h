@@ -61,6 +61,21 @@ namespace geometry
 
 		virtual bool intersect(const Polygon* const other) const override;
 
+		virtual std::vector<cocos2d::Vec2>
+			intersectPoints(const Shape* const other) const override;
+
+		virtual std::vector<cocos2d::Vec2>
+			intersectPoints(const Rect* const other) const override;
+
+		virtual std::vector<cocos2d::Vec2>
+			intersectPoints(const Segment* const other) const override;
+
+		virtual std::vector<cocos2d::Vec2>
+			intersectPoints(const Circle* const other) const override;
+
+		virtual std::vector<cocos2d::Vec2>
+			intersectPoints(const Polygon* const other) const override;
+
 
 		virtual bool overlap(const Shape* const other) const override;
 
